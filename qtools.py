@@ -82,6 +82,8 @@ def qtools():
         # updating Output Window
         if isinstance(zapros, str) and isinstance(otvet, str):
             output_window = session.get('output_window')
+            if output_window is None:
+                output_window = ''
             output_window = zapros + '<br>' + output_window
             output_window = otvet + '<br>' + output_window
             session['output_window'] = output_window
