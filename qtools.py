@@ -80,14 +80,15 @@ def qtools():
 
     def add_to_output(zapros, otvet):
         # updating Output Window
-
-        output_window = session.get('output_window')
-        output_window = zapros + '<br>' + output_window
-        output_window = otvet + '<br>' + output_window
-        session['output_window'] = output_window
+        if isinstance(zapros, str) and isinstance(otvet, str):
+            output_window = session.get('output_window')
+            output_window = zapros + '<br>' + output_window
+            output_window = otvet + '<br>' + output_window
+            session['output_window'] = output_window
 
     if request.method == 'POST':
-
+        zapros = ''
+        otvet = ''
         # print(request.form, request.form.get('braille_txt'))
 
         # Очистка окна вывода
@@ -100,7 +101,7 @@ def qtools():
         # -- --- .-. ... . -.-. --- -.. . .--. .-. --- -.-. . ... ... .. -. --.
         if request.form.get('morse_txt'):
             try:
-                zapros = request.form['morse_txt']
+                zapros = request.form.get('morse_txt')
                 if len(zapros) > 0:
                     morse = MorseCodeTranslator()
                     otvet = morse.translate_morse(zapros).replace('\n','<br>')
@@ -119,7 +120,7 @@ def qtools():
         # ⠠⠞⠗⠁⠝⠎⠇⠁⠞⠊⠝⠛ ⠞⠑⠭⠞ ⠖ ⠠⠛⠗⠁⠙⠑ ⠼⠃ ⠠⠃⠗⠁⠊⠇⠇⠑ ⠊⠎ ⠁ ⠝⠕⠝⠤⠞⠗
         if request.form.get('braille_txt'):
             try:
-                zapros = request.form['braille_txt']
+                zapros = request.form.get('braille_txt')
                 if len(zapros) > 0:
                     braille = BrailleTranslator()
                     if zapros.replace(' ','').isnumeric():
@@ -141,7 +142,7 @@ def qtools():
         # H	He	Li	Be	B	C	N	O	F	Ne	Na	Mg	Al	Si	P	S	Cl	Ar
         if request.form.get('mendel_txt'):
             try:
-                zapros = request.form['mendel_txt']
+                zapros = request.form.get('mendel_txt')
                 if len(zapros) > 0:
                     mendel = PeriodicTable()
                     otvet = ''
@@ -186,7 +187,7 @@ def qtools():
         # ----------абвгдеёжзийклмнопрстуфхцчшщъыьэюя----------
         if request.form.get('alpha_txt'):
             try:
-                zapros = request.form['alpha_txt']
+                zapros = request.form.get('alpha_txt')
                 otvet = ''
                 alphabet_en = '0abcdefghijklmnopqrstuvwxyz'
                 alphabet_ru = '0абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
@@ -228,4 +229,4 @@ def qtools():
 
 if __name__ == '__main__':
 
-    app.run(debug=False)
+    app.run(debug=True)
