@@ -78,8 +78,9 @@ def qtools():
     else:
         output_window = session.get('output_window')
 
-    def add_to_output():
+    def add_to_output(zapros, otvet):
         # updating Output Window
+
         output_window = session.get('output_window')
         output_window = zapros + '<br>' + output_window
         output_window = otvet + '<br>' + output_window
@@ -106,11 +107,11 @@ def qtools():
                     # check for empty result - REVERSE: text to morse convert
                     if otvet == '<br>':
                         otvet = morse.translate_text(zapros)
-                    add_to_output()
+                    add_to_output(zapros, otvet)
             except:
                 zapros = ''
                 otvet = 'Error: сбой блока Morse'
-                add_to_output()
+                add_to_output(zapros, otvet)
             return redirect('/')
 
         # ⠠⠞⠗⠁⠝⠎⠇⠁⠞⠊⠝⠛ ⠞⠑⠭⠞ ⠖ ⠠⠛⠗⠁⠙⠑ ⠼⠃ ⠠⠃⠗⠁⠊⠇⠇⠑ ⠊⠎ ⠁ ⠝⠕⠝⠤⠞⠗
@@ -128,11 +129,11 @@ def qtools():
                     else:
                         # просто текст - возвращается код Брайля в UTF-8
                         otvet = '<braille>' + braille.translate_text(zapros) + '</braille>'
-                    add_to_output()
+                    add_to_output(zapros, otvet)
             except:
                 zapros = ''
                 otvet = 'Error: сбой блока Braille'
-                add_to_output()
+                add_to_output(zapros, otvet)
             return redirect('/')
 
         # H	He	Li	Be	B	C	N	O	F	Ne	Na	Mg	Al	Si	P	S	Cl	Ar
@@ -173,11 +174,11 @@ def qtools():
                                 # по символам элемента (Ti Na Sb etc.) выдаем АтомныйНомер Хим. Элемента
                                 for element_name in zapros.split():
                                     otvet += str(mendel.elementBySymbol(element_name)[0]) + ' '
-                    add_to_output()
+                    add_to_output(zapros, otvet)
             except:
                 zapros = ''
                 otvet = 'Error: сбой блока Mendeleev'
-                add_to_output()
+                add_to_output(zapros, otvet)
             return redirect('/')
 
         # ----------абвгдеёжзийклмнопрстуфхцчшщъыьэюя----------
@@ -205,11 +206,11 @@ def qtools():
                             if letter_number == '':
                                 letter_number = str(alphabet_en.index(letter)) if letter in alphabet_en else ''
                             otvet += letter_number + ' '
-                    add_to_output()
+                    add_to_output(zapros, otvet)
             except:
                 zapros = ''
                 otvet = 'Error: сбой блока Alpha'
-                add_to_output()
+                add_to_output(zapros, otvet)
             return redirect('/')
 
     page = f'{page_head}' \
