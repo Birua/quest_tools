@@ -1,0 +1,65 @@
+body {  margin: 10px;
+        padding: 0px;
+        text-align: left;
+}
+table {
+    margin: 10px;
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+td {
+    padding: 5px; /* Поля в ячейках */
+    padding-right:20px;
+    padding-left:20px;
+}
+table td, table th {
+  border: 1px solid black;
+}
+input[type=button], input[type=submit], input[type=reset] {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+footer{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+  margin: -10px;
+  background: #d5f7e2;
+}
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 48%;
+  height: 100%;
+  padding: 10px;
+  overflow: auto;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+  height: 100%;
+  overflow: auto;
+}
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+@font-face { font-family: Braille_Outline; src: url('Apple Braille Outline 6 Dot.ttf'); }
+      braille {
+         font-family: Braille_Outline; font-size: 250%
+      }
