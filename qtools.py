@@ -1,8 +1,12 @@
 """
     Flask app for quest tools.
     - morse code translator
+    - Braille code translator
+    - Mendeleev periodic table reference
+    - RU/EN alphabet to numbers and reverse
 
     Version History:
+      0.06 -- 07/06/21 render_template
       0.05 -- 03/06/21 Aphabet
       0.04 -- 02/06/21 Mendeleev Periodic Table
       0.03 -- 02/06/21 Braille conversion
@@ -10,7 +14,8 @@
       0.01 -- 31/05/21 First steps
 
 """
-from flask import Flask, redirect, request, session
+from flask import Flask, redirect, request, session, render_template
+from markupsafe import Markup
 from apps.morse import MorseCodeTranslator
 from apps.braille import BrailleTranslator
 from apps.mendel import PeriodicTable
@@ -21,57 +26,6 @@ app.secret_key = b'D5r09fAe+!aIB1eRMT4tO*ko(M.w^s'
 
 @app.route('/', methods=['POST', 'GET'])
 def qtools():
-
-    page_head = '''<!doctype html>
-        <html lang="ru">
-          <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <title>Quest tools</title>
-
-            <link rel="stylesheet" href="static/bootstrap.css">
-            <link rel="stylesheet" href="static/qtools.css">
-
-        </head>
-        <span style="float: right"><font size="-1">Версия 0.05</font></span>
-        <nav>
-            <h2>Quest tools</h2>         
-        </nav>
-        <body>
-        <main>
-        '''
-    page_foot = '''
-        </main>
-        </body></html>'''
-    input_form = '''
-              <form action = "/" method = "post">
-                 <p align="right">Азбука Морзе:
-                    <input type="text" name="morse_txt" />
-                    <input type="submit" name="morse_submit" value="&#9735" title="отправить"/>
-                 </p>
-                 <p align="right">Шрифт Брайля: <img src="/static/Braille_cell.svg" alt="Braille" width="40" height="56">
-                    <input type="text" name="braille_txt" />
-                    <input type="submit" name="braille_submit" value="&#9735" title="отправить"/>
-                 </p>
-                 <p align="right">Таблица Менделеева:
-                    <input type="text" name="mendel_txt" />
-                    <input type="submit" name="mendel_submit" value="&#9735" title="отправить"/>
-                 </p>
-                 <p align="right">Алфавит:
-                    <input type="text" name="alpha_txt" />
-                    <input type="submit" name="alpha_submit" value="&#9735" title="отправить"/>
-                 </p>               
-                 </form>
-                 '''
-                 #  <font size="-1">(код, слово кириллицей или латиницей; несколько &#8212 через пробел)</font>
-    clear_button = '''
-                 <form action = "/" method = "post">
-                    <p>Очистить вывод 
-                       <input type="submit" name="clear_submit" value="&#9851" title="очистить"/>
-                    </p>
-                 </form> 
-                 '''
 
     if session.get('output_window') is None:
         output_window = ''
@@ -84,8 +38,8 @@ def qtools():
             output_window = session.get('output_window')
             if output_window is None:
                 output_window = ''
-            output_window = zapros + '<br>' + output_window
-            output_window = otvet + '<br>' + output_window
+            output_window = zapros + ' <br> <hr> ' + output_window
+            output_window = otvet + ' <br> ' + output_window
             session['output_window'] = output_window
 
     if request.method == 'POST':
@@ -203,10 +157,12 @@ def qtools():
                             otvet_en += alphabet_en[letter_number] if letter_number < len(alphabet_en) else ''
                         otvet = otvet_ru + '<br>' + otvet_en
                     else:
-                        for letter in zapros:
+                        for letter in zapros.lower():
                             letter_number = ''
+                            # выдавать номер только для букв, которые есть в alphabet_ru
                             letter_number = str(alphabet_ru.index(letter)) if letter in alphabet_ru else ''
                             if letter_number == '':
+                                # буквы не было в русском, ищем в английском
                                 letter_number = str(alphabet_en.index(letter)) if letter in alphabet_en else ''
                             otvet += letter_number + ' '
                     add_to_output(zapros, otvet)
@@ -216,18 +172,8 @@ def qtools():
                 add_to_output(zapros, otvet)
             return redirect('/')
 
-    page = f'{page_head}' \
-           '''   <div class="row">
-             <div class="column"> ''' \
-           f'{input_form} \n' \
-           f'</div> <!-- column --> \n' \
-           '''<div class="column">''' \
-           f'{clear_button} \n' \
-           f'<p>{output_window}</p> \n' \
-           '</div> <!-- column -->  </div> <!-- row -->' \
-           f'{page_foot}'
 
-    return page
+    return render_template('quest_tools.html', output_window=Markup(session['output_window']), current_version='0.06')
 
 if __name__ == '__main__':
 

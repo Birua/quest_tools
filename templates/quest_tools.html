@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Quest tools</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='qtools.css') }}">
+
+</head>
+
+<span style="float: right"><font size="-1">{{ current_version }}</font></span>
+
+<nav>
+    <h2>Quest tools</h2>
+</nav>
+
+<body>
+<main>
+   <div class="row">
+       <div class="column">
+          <form action = "/" method = "post">
+             <p align="right">Азбука Морзе:
+                <input type="text" size="15" name="morse_txt" />
+                <input type="submit" name="morse_submit" value="&#9735" title="отправить"/>
+             </p>
+             <p align="right">Шрифт Брайля: <img src="{{ url_for('static', filename='Braille_cell.svg') }}" alt="Braille" width="40" height="56">
+                <input type="text" size="15" name="braille_txt" />
+                <input type="submit" name="braille_submit" value="&#9735" title="отправить"/>
+             </p>
+             <p align="right">Таблица Менделеева:
+                <input type="text" size="15" name="mendel_txt" />
+                <input type="submit" name="mendel_submit" value="&#9735" title="отправить"/>
+             </p>
+             <p align="right">Алфавит:
+                <input type="text" size="15" name="alpha_txt" />
+                <input type="submit" name="alpha_submit" value="&#9735" title="отправить"/>
+             </p>
+          </form>
+
+       </div> <!-- column -->
+       <div class="column">
+            <!-- Clear Button -->
+            <form action = "/" method = "post">
+                <p>Очистить вывод
+                   <input type="submit" name="clear_submit" value="&#9851" title="очистить"/>
+                </p>
+            </form>
+
+            <p>{{ output_window }}</p>
+
+            <p>
+               Перевод &#8210; автоматический: код в текст ИЛИ текст в код. <br>
+               Несколько кодов или слов разделяются пробелами.
+            </p>
+
+        </div> <!-- column -->
+   </div> <!-- row -->
+</main>
+</body></html>
