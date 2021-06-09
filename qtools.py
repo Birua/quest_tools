@@ -33,6 +33,7 @@ def qtools():
 
     if session.get('output_window') is None:
         output_window = ''
+        session['output_window'] = ''
     else:
         output_window = session.get('output_window')
 
