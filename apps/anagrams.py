@@ -42,12 +42,19 @@ class Anagrams():
         outputString = 'Варианты из двух слов:\n'
         output_words = set()
 
-        for i in range(len(inputString) - 1, int(len(inputString) / 2), -1):
+        for i in range(len(inputString) - 2, int(len(inputString) / 2), -1):
             # iterating from len to half
             for x in combinations(inputString, i):
                 y = ''.join(x)
                 z = str_diff(inputString, y)  # leftover of letters
-                if y in self.hash_anagrams and z in self.hash_anagrams:
+                #
+                isInAnagrams = (y in self.hash_anagrams
+                              and z in self.hash_anagrams)
+                # Должно содержать гласные
+                hasVowels = True
+                if len(z) <= 3 and len(set(z).intersection("аеёиоуыэюя")) == 0:
+                    hasVowels = False
+                if isInAnagrams and hasVowels:
                     output_words.add(self.hash_anagrams[y] + ' + ' + self.hash_anagrams[z])
 
         for wordCombo in output_words:

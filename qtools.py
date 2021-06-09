@@ -7,6 +7,7 @@
     - RU anagrams (one- and two-word)
 
     Version History:
+      0.08 -- 09/06/21 cookie size fix, two-word anagrams filter
       0.07 -- 09/06/21 One-word and two-word anagrams
       0.06 -- 07/06/21 render_template
       0.05 -- 03/06/21 Aphabet
@@ -43,6 +44,8 @@ def qtools():
                 output_window = ''
             output_window = zapros + ' <br> <hr> ' + output_window
             output_window = otvet + ' <br> ' + output_window
+            if len(output_window) > 4000:
+                output_window = output_window[0:4000]
             session['output_window'] = output_window
 
     if request.method == 'POST':
@@ -195,7 +198,7 @@ def qtools():
                 add_to_output(zapros, otvet)
             return redirect('/')
 
-    return render_template('quest_tools.html', output_window=Markup(session['output_window']), current_version='0.07')
+    return render_template('quest_tools.html', output_window=Markup(session['output_window']), current_version='0.08')
 
 if __name__ == '__main__':
 
