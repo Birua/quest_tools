@@ -4,8 +4,10 @@
     - Braille code translator
     - Mendeleev periodic table reference
     - RU/EN alphabet to numbers and reverse
+    - RU anagrams (one- and two-word)
 
     Version History:
+      0.07 -- 09/06/21 One-word and two-word anagrams
       0.06 -- 07/06/21 render_template
       0.05 -- 03/06/21 Aphabet
       0.04 -- 02/06/21 Mendeleev Periodic Table
@@ -19,6 +21,7 @@ from markupsafe import Markup
 from apps.morse import MorseCodeTranslator
 from apps.braille import BrailleTranslator
 from apps.mendel import PeriodicTable
+from apps.anagrams import Anagrams
 
 app = Flask(__name__)
 # Set the secret key to some random bytes. Keep this really secret!
@@ -172,8 +175,27 @@ def qtools():
                 add_to_output(zapros, otvet)
             return redirect('/')
 
+        # ----------ыммарганА----------
+        # Анаграммы
+        # ----------ыммарганА----------
+        if request.form.get('anagrams_txt'):
 
-    return render_template('quest_tools.html', output_window=Markup(session['output_window']), current_version='0.06')
+            try:
+                zapros = request.form.get('anagrams_txt')
+                otvet = f'Букв: {len(zapros.strip())}<br>'
+                otvet += 'Полная анаграмма: '
+                if len(zapros) > 0:
+                    anagram = Anagrams()
+                    otvet += anagram.getOne(zapros).replace('\n','<br>')
+                    otvet += '<br>' + anagram.getTwo(zapros).replace('\n', '<br>')
+                    add_to_output(zapros, otvet)
+            except:
+                zapros = ''
+                otvet = 'Error: сбой блока Anagrams'
+                add_to_output(zapros, otvet)
+            return redirect('/')
+
+    return render_template('quest_tools.html', output_window=Markup(session['output_window']), current_version='0.07')
 
 if __name__ == '__main__':
 
