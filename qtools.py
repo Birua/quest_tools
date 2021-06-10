@@ -7,10 +7,11 @@
     - RU anagrams (one- and two-word)
 
     Version History:
+      0.09 -- 10/06/21 Braille changes, multiple anagrams
       0.08 -- 09/06/21 cookie size fix, two-word anagrams filter
       0.07 -- 09/06/21 One-word and two-word anagrams
-      0.06 -- 07/06/21 render_template
-      0.05 -- 03/06/21 Aphabet
+      0.06 -- 07/06/21 Jinja render_template
+      0.05 -- 03/06/21 Alphabet
       0.04 -- 02/06/21 Mendeleev Periodic Table
       0.03 -- 02/06/21 Braille conversion
       0.02 -- 01/06/21 Overall design and Morse Code
@@ -56,7 +57,7 @@ def qtools():
 
         # Очистка окна вывода
         if 'clear_submit' in request.form:
-            session['output_window'] = ""
+            session['output_window'] = ''
             return redirect('/')
 
         # -- --- .-. ... . -.-. --- -.. . .--. .-. --- -.-. . ... ... .. -. --.
@@ -65,13 +66,13 @@ def qtools():
         if request.form.get('morse_txt'):
             try:
                 zapros = request.form.get('morse_txt')
-                if len(zapros) > 0:
-                    morse = MorseCodeTranslator()
-                    otvet = morse.translate_morse(zapros).replace('\n','<br>')
-                    # check for empty result - REVERSE: text to morse convert
-                    if otvet == '<br>':
-                        otvet = morse.translate_text(zapros)
-                    add_to_output(zapros, otvet)
+
+                morse = MorseCodeTranslator()
+                otvet = morse.translate_morse(zapros).replace('\n','<br>')
+                # check for empty result - REVERSE: text to morse convert
+                if otvet == '<br>':
+                    otvet = morse.translate_text(zapros)
+                add_to_output(zapros, otvet)
             except:
                 zapros = ''
                 otvet = 'Error: сбой блока Morse'
@@ -84,16 +85,21 @@ def qtools():
         if request.form.get('braille_txt'):
             try:
                 zapros = request.form.get('braille_txt')
-                if len(zapros) > 0:
-                    braille = BrailleTranslator()
-                    if zapros.replace(' ','').isnumeric():
-                        # цифровые коды Брайля 12 14 и т.п.
-                        otvet = braille.convert_codes(zapros).replace('\n','<br>')
-                        otvet += '<br> <braille>' + braille.translate_text(otvet.split('<br>')[0]) + '</braille>'
+
+                braille = BrailleTranslator()
+                if zapros.replace(' ','').isnumeric():
+                    # цифровые коды Брайля 12 14 и т.п.
+                    otvet = braille.convert_codes(zapros).replace('\n','<br>')
+                    otvet += '<br> <braille>' + braille.translate_text(otvet.split('<br>')[1]) + '</braille>'
+                else:
+                    if max([ord(_) for _ in zapros]) > 10_000:
+                        # Это коды Брайля UTF-8, которые конвертируем в обычный текст
+                        otvet = braille.convertBrailleUnicodes(zapros)
                     else:
-                        # просто текст - возвращается код Брайля в UTF-8
+                        # Это обычный текст, который конвертируем в коды Брайля
                         otvet = '<braille>' + braille.translate_text(zapros) + '</braille>'
-                    add_to_output(zapros, otvet)
+
+                add_to_output(zapros, otvet)
             except:
                 zapros = ''
                 otvet = 'Error: сбой блока Braille'
@@ -106,39 +112,39 @@ def qtools():
         if request.form.get('mendel_txt'):
             try:
                 zapros = request.form.get('mendel_txt')
-                if len(zapros) > 0:
-                    mendel = PeriodicTable()
-                    otvet = ''
-                    if len(zapros.split()) == 1:
-                        # Короткий запрос на 1 элемент
-                        if zapros.isnumeric():
-                            # Атомный номер элемента
-                            if len(mendel.elementByNumber(zapros)[1]) > 1:
-                                otvet = ' '.join([str(_) for _ in mendel.elementByNumber(zapros)])
-                            else:
-                                otvet = mendel.elementByNumber(zapros)
+
+                mendel = PeriodicTable()
+                otvet = ''
+                if len(zapros.split()) == 1:
+                    # Короткий запрос на 1 элемент
+                    if zapros.isnumeric():
+                        # Атомный номер элемента
+                        if len(mendel.elementByNumber(zapros)[1]) > 1:
+                            otvet = ' '.join([str(_) for _ in mendel.elementByNumber(zapros)])
                         else:
-                            # Поиск по русскому имени
-                            otvet = ' '.join([str(_) for _ in mendel.elementByNameRu(zapros)])
-                            if otvet.strip() == '':
-                                # по символу элемента - Ti Na Sb etc.
-                                otvet += ' '.join([str(_) for _ in mendel.elementBySymbol(zapros)])
+                            otvet = mendel.elementByNumber(zapros)
                     else:
-                        # Групповой запрос на несколько элементов
-                        if zapros.replace(' ','').isnumeric():
-                            # по атомному номеру
-                            for number in zapros.split():
-                                otvet += str(mendel.elementByNumber(number)[3]) + ' '
-                        else:
-                            #
-                            # по русскому имени выдаем Символ элемента
+                        # Поиск по русскому имени
+                        otvet = ' '.join([str(_) for _ in mendel.elementByNameRu(zapros)])
+                        if otvet.strip() == '':
+                            # по символу элемента - Ti Na Sb etc.
+                            otvet += ' '.join([str(_) for _ in mendel.elementBySymbol(zapros)])
+                else:
+                    # Групповой запрос на несколько элементов
+                    if zapros.replace(' ','').isnumeric():
+                        # по атомному номеру
+                        for number in zapros.split():
+                            otvet += str(mendel.elementByNumber(number)[3]) + ' '
+                    else:
+                        #
+                        # по русскому имени выдаем Символ элемента
+                        for element_name in zapros.split():
+                            otvet += str(mendel.elementByNameRu(element_name)[3]) + ' '
+                        if otvet.strip() == '':
+                            # по символам элемента (Ti Na Sb etc.) выдаем АтомныйНомер Хим. Элемента
                             for element_name in zapros.split():
-                                otvet += str(mendel.elementByNameRu(element_name)[3]) + ' '
-                            if otvet.strip() == '':
-                                # по символам элемента (Ti Na Sb etc.) выдаем АтомныйНомер Хим. Элемента
-                                for element_name in zapros.split():
-                                    otvet += str(mendel.elementBySymbol(element_name)[0]) + ' '
-                    add_to_output(zapros, otvet)
+                                otvet += str(mendel.elementBySymbol(element_name)[0]) + ' '
+                add_to_output(zapros, otvet)
             except:
                 zapros = ''
                 otvet = 'Error: сбой блока Mendeleev'
@@ -154,52 +160,61 @@ def qtools():
                 otvet = ''
                 alphabet_en = '0abcdefghijklmnopqrstuvwxyz'
                 alphabet_ru = '0абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
-                if len(zapros) > 0:
-                    if zapros.replace(' ', '').isnumeric():
-                        otvet_ru = ''
-                        otvet_en = ''
-                        for letter_number in zapros.split():
-                            letter_number = int(letter_number)
-                            otvet_ru += alphabet_ru[letter_number] if letter_number < len(alphabet_ru) else ''
-                            otvet_en += alphabet_en[letter_number] if letter_number < len(alphabet_en) else ''
-                        otvet = otvet_ru + '<br>' + otvet_en
-                    else:
-                        for letter in zapros.lower():
-                            letter_number = ''
-                            # выдавать номер только для букв, которые есть в alphabet_ru
-                            letter_number = str(alphabet_ru.index(letter)) if letter in alphabet_ru else ''
-                            if letter_number == '':
-                                # буквы не было в русском, ищем в английском
-                                letter_number = str(alphabet_en.index(letter)) if letter in alphabet_en else ''
-                            otvet += letter_number + ' '
-                    add_to_output(zapros, otvet)
+
+                if zapros.replace(' ', '').isnumeric():
+                    otvet_ru = ''
+                    otvet_en = ''
+                    for letter_number in zapros.split():
+                        letter_number = int(letter_number)
+                        otvet_ru += alphabet_ru[letter_number] if letter_number < len(alphabet_ru) else ''
+                        otvet_en += alphabet_en[letter_number] if letter_number < len(alphabet_en) else ''
+                    otvet = otvet_ru + '<br>' + otvet_en
+                else:
+                    for letter in zapros.lower():
+                        letter_number = ''
+                        # выдавать номер только для букв, которые есть в alphabet_ru
+                        letter_number = str(alphabet_ru.index(letter)) if letter in alphabet_ru else ''
+                        if letter_number == '':
+                            # буквы не было в русском, ищем в английском
+                            letter_number = str(alphabet_en.index(letter)) if letter in alphabet_en else ''
+                        otvet += letter_number + ' '
+                add_to_output(zapros, otvet)
             except:
                 zapros = ''
                 otvet = 'Error: сбой блока Alpha'
                 add_to_output(zapros, otvet)
             return redirect('/')
 
-        # ----------ыммарганА----------
+        # ----------Анаграммы-ыммарганА----------
         # Анаграммы
-        # ----------ыммарганА----------
+        # ----------Анаграммы-ыммарганА----------
         if request.form.get('anagrams_txt'):
 
             try:
                 zapros = request.form.get('anagrams_txt')
-                otvet = f'Букв: {len(zapros.strip())}<br>'
-                otvet += 'Полная анаграмма: '
-                if len(zapros) > 0:
+                if len(zapros.split()) == 1:
+                    # Одно слово
+                    otvet = f'Букв: {len(zapros.strip())}<br>'
+                    otvet += 'Полная анаграмма: '
                     anagram = Anagrams()
                     otvet += anagram.getOne(zapros).replace('\n','<br>')
                     otvet += '<br>' + anagram.getTwo(zapros).replace('\n', '<br>')
-                    add_to_output(zapros, otvet)
+                else:
+                    # Несколько слов:
+                    otvet = ''
+                    anagram = Anagrams()
+                    for word in zapros.split():
+                        otvet += f'{word.strip()} ({len(word.strip())}): '
+                        otvet += f'{anagram.getOne(word)}<br>'
+
+                add_to_output(zapros, otvet)
             except:
                 zapros = ''
                 otvet = 'Error: сбой блока Anagrams'
                 add_to_output(zapros, otvet)
             return redirect('/')
 
-    return render_template('quest_tools.html', output_window=Markup(session['output_window']), current_version='0.08')
+    return render_template('quest_tools.html', output_window=Markup(session['output_window']), current_version='0.09')
 
 if __name__ == '__main__':
 

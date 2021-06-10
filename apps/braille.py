@@ -14,9 +14,9 @@ class BrailleTranslator:
                          '.': '\u2832',
                          "'": '\u2804', ',': '\u2802', '-': '\u2824', '/': '\u280C', '!': '\u2816', '?': '\u2826',
                          '$': '\u2832', ':': '\u2812',
-                         ';': '\u2830', '(': '\u2836', ')': '\u2836', ' ': ' ', '1': '\u2801', '2': '\u2803',
-                         '3': '\u2809', '4': '\u2819',
-                         '5': '\u2811', '6': '\u280B', '7': '\u281B', '8': '\u2813', '9': '\u280A', '0': '\u281A',
+                         ';': '\u2830', '(': '\u2836', ')': '\u2836', ' ': ' ',
+                         '1': '\u2801', '2': '\u2803', '3': '\u2809', '4': '\u2819', '5': '\u2811',
+                         '6': '\u280B', '7': '\u281B', '8': '\u2813', '9': '\u280A', '0': '\u281A',
                          'а': '\u2801',
                          'б': '\u2803',
                          'в': '\u283A',
@@ -155,20 +155,20 @@ class BrailleTranslator:
   "234": ["s", "с", "", "&#x280E;"],
  "2345": ["t", "т", "", "&#x281E;"],
   "136": ["u", "у", "", "&#x2825;"],
- "1236": ["v", "&nbsp;", "", "&#x2827;"],
+ "1236": ["v", "v", "", "&#x2827;"],
  "2456": ["w", "в", "", "&#x283A;"],
  "1346": ["x", "щ", "", "&#x282D;"],
-"13456": ["y", "&nbsp;", "", "&#x283D;"],
+"13456": ["y", "y", "", "&#x283D;"],
  "1356": ["z", "з", "", "&#x2835;"],
-   "16": ["&nbsp;", "ё", "", "&#x2821;"],
-"12346": ["&nbsp;", "й", "", "&#x282F;"],
-  "156": ["&nbsp;", "ш", "", "&#x2831;"],
-"12356": ["&nbsp;", "ъ", "", "&#x2837;"],
- "2346": ["&nbsp;", "ы", "", "&#x282E;"],
-"23456": ["&nbsp;", "ь", "", "&#x283E;"],
-  "246": ["&nbsp;", "э", "", "&#x282A;"],
- "1256": ["&nbsp;", "ю", "", "&#x2833;"],
- "1246": ["&nbsp;", "я", "", "&#x282B;"],
+   "16": ["ё", "ё", "", "&#x2821;"],
+"12346": ["й", "й", "", "&#x282F;"],
+  "156": ["ш", "ш", "", "&#x2831;"],
+"12356": ["ъ", "ъ", "", "&#x2837;"],
+ "2346": ["ы", "ы", "", "&#x282E;"],
+"23456": ["ь", "ь", "", "&#x283E;"],
+  "246": ["э", "э", "", "&#x282A;"],
+ "1256": ["ю", "ю", "", "&#x2833;"],
+ "1246": ["я", "я", "", "&#x282B;"],
   "236": ["«", "«", "", "&#x2826;"],
   "356": ["»", "»", "", "&#x2834;"],
    "36": ["&mdash;", "", "&nbsp;", "&#x2824;"],
@@ -218,9 +218,21 @@ class BrailleTranslator:
             convertedText += self.characterUnicodes.get(character,'')
         return convertedText
 
+    def convertBrailleUnicodes(self,textToConvert):
+        # remapping the Unicodes dictionary
+        unicodeCharacters = {v: k for k, v in self.characterUnicodes.items()}
+        convertedText = ''
+        for character in textToConvert:
+            convertedText += unicodeCharacters[character]
+        return convertedText
+
 
 if __name__ == '__main__':
      braille = BrailleTranslator()
      
      print(braille.translate_text('s_s'))
-     print(braille.convert_codes('345'))
+     print(braille.convert_codes('23456'))
+
+     print(braille.convertBrailleUnicodes(braille.translate_text('easy game')))
+
+
