@@ -131,6 +131,10 @@ class PeriodicTable():
                     ]
         self.periodicTableData = pd.DataFrame(elements[1:], columns=elements[0])
         # self.periodicTableData = self.periodicTableData.set_index('AtomicNumber')
+        assert 'Fermium' in self.elementByNumber(100)
+        assert 'Fermium' in self.elementByNameRu('фермий')
+        assert 'Fermium' in self.elementBySymbol('fm')
+        assert 100 in self.elementBySymbol('fm')
 
     def elementByNumber(self, number):
         df = self.periodicTableData
@@ -160,6 +164,6 @@ class PeriodicTable():
 
 if __name__ == '__main__':
     mendel = PeriodicTable()
-    print(mendel.elementByNumber(8))
-    print(mendel.elementByNameRu('сера1'))
-    print(mendel.elementBySymbol('ti'))
+    print(mendel.elementByNumber(100))
+    print(mendel.elementByNameRu('фермий'))
+    print(mendel.elementBySymbol('fm'))

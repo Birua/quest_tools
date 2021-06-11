@@ -23,24 +23,28 @@
        <div class="column">
           <form action = "/" method = "post">
              <p align="right">Азбука Морзе:
-                <input type="text" size="15" name="morse_txt" />
+                <input type="text" size="12" name="morse_txt" />
                 <input type="submit" name="morse_submit" value="&#9735" title="отправить"/>
              </p>
              <p align="right">Шрифт Брайля: <img src="{{ url_for('static', filename='Braille_cell.svg') }}" alt="Braille" width="40" height="56">
-                <input type="text" size="15" name="braille_txt" />
+                <input type="text" size="12" name="braille_txt" />
                 <input type="submit" name="braille_submit" value="&#9735" title="отправить"/>
              </p>
              <p align="right">Таблица Менделеева:
-                <input type="text" size="15" name="mendel_txt" />
+                <input type="text" size="12" name="mendel_txt" />
                 <input type="submit" name="mendel_submit" value="&#9735" title="отправить"/>
              </p>
              <p align="right">Алфавит:
-                <input type="text" size="15" name="alpha_txt" />
+                <input type="text" size="12" name="alpha_txt" />
                 <input type="submit" name="alpha_submit" value="&#9735" title="отправить"/>
              </p>
              <p align="right">Анаграммы:
-                <input type="text" size="15" name="anagrams_txt" />
+                <input type="text" size="12" name="anagrams_txt" />
                 <input type="submit" name="anagrams_submit" value="&#9735" title="отправить"/>
+             </p>
+              <p align="right">Подсказка для олимпиек:
+                <input type="text" size="12" name="olymp_txt" />
+                <input type="submit" name="olymp_submit" value="&#9735" title="отправить"/>
              </p>
           </form>
 

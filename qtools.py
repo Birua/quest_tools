@@ -7,6 +7,8 @@
     - RU anagrams (one- and two-word)
 
     Version History:
+      0.11 -- 11/06/21 OlympSolver
+      0.10 -- 11/06/21 Introducing self-testing via assert (only for Debug = True!)
       0.09 -- 10/06/21 Braille changes, multiple anagrams
       0.08 -- 09/06/21 cookie size fix, two-word anagrams filter
       0.07 -- 09/06/21 One-word and two-word anagrams
@@ -24,6 +26,7 @@ from apps.morse import MorseCodeTranslator
 from apps.braille import BrailleTranslator
 from apps.mendel import PeriodicTable
 from apps.anagrams import Anagrams
+from apps.olymp import OlympSolver
 
 app = Flask(__name__)
 # Set the secret key to some random bytes. Keep this really secret!
@@ -214,7 +217,35 @@ def qtools():
                 add_to_output(zapros, otvet)
             return redirect('/')
 
-    return render_template('quest_tools.html', output_window=Markup(session['output_window']), current_version='0.09')
+        # --------------------------------------------------
+        # Помощник для олимпиеек
+        # --------------------------------------------------
+        if request.form.get('olymp_txt'):
+
+            try:
+                zapros = request.form.get('olymp_txt')
+                if len(zapros.split()) == 1:
+                    # Одно слово
+                    olymp = OlympSolver()
+                    otvet = zapros.strip() + ' = ' + olymp.getSociationsForOne(zapros.strip())
+
+                elif len(zapros.split()) == 2:
+                    # Два
+                    olymp = OlympSolver()
+                    otvet = zapros.split()[0] + ' + ' + zapros.split()[1] + \
+                            ' = ' + olymp.getSociationsForTwo(zapros.strip())
+                else:
+                    # Больше 2-х слов
+                    otvet = 'Ошибка: по олимпийке нужно одно или два слова.'
+
+                add_to_output(zapros, otvet)
+            except:
+                zapros = ''
+                otvet = 'Error: сбой блока Olymp'
+                add_to_output(zapros, otvet)
+            return redirect('/')
+
+    return render_template('quest_tools.html', output_window=Markup(session.get('output_window','')), current_version='0.11')
 
 if __name__ == '__main__':
 

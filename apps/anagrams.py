@@ -14,6 +14,10 @@ class Anagrams():
         with gzip.open('static/hash_anagrams_2.json.gz', 'r') as f:
             self.hash_anagrams = json.loads(f.read().decode('cp1251'))
 
+        assert 'слово' in self.getOne('ослов')
+        assert 'супер' in self.getTwo('сутестпер')
+
+
     def getOne(self,inputString):
         '''Get one-word anagram'''
         inputString = inputString.strip()
@@ -63,6 +67,7 @@ class Anagrams():
         # outputString += f'\n - время обработки: {(time.time() - self.start):.3f} с.'
 
         return outputString
+
 
 if __name__ == "__main__":
 
