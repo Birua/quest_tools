@@ -5,8 +5,10 @@
     - Mendeleev periodic table reference
     - RU/EN alphabet to numbers and reverse
     - RU anagrams (one- and two-word)
+    - Olympiika word game helper
 
     Version History:
+      0.12 -- 15/06/21 Apps print their id in the output, input text tooltips
       0.11 -- 11/06/21 OlympSolver
       0.10 -- 11/06/21 Introducing self-testing via assert (only for Debug = True!)
       0.09 -- 10/06/21 Braille changes, multiple anagrams
@@ -75,6 +77,7 @@ def qtools():
                 # check for empty result - REVERSE: text to morse convert
                 if otvet == '<br>':
                     otvet = morse.translate_text(zapros)
+                zapros = '<i>Morse:</i> ' + zapros
                 add_to_output(zapros, otvet)
             except:
                 zapros = ''
@@ -101,7 +104,7 @@ def qtools():
                     else:
                         # Это обычный текст, который конвертируем в коды Брайля
                         otvet = '<braille>' + braille.translate_text(zapros) + '</braille>'
-
+                zapros = '<i>Braille:</i> ' + zapros
                 add_to_output(zapros, otvet)
             except:
                 zapros = ''
@@ -147,6 +150,7 @@ def qtools():
                             # по символам элемента (Ti Na Sb etc.) выдаем АтомныйНомер Хим. Элемента
                             for element_name in zapros.split():
                                 otvet += str(mendel.elementBySymbol(element_name)[0]) + ' '
+                zapros = '<i>Mendel:</i> ' + zapros
                 add_to_output(zapros, otvet)
             except:
                 zapros = ''
@@ -181,6 +185,7 @@ def qtools():
                             # буквы не было в русском, ищем в английском
                             letter_number = str(alphabet_en.index(letter)) if letter in alphabet_en else ''
                         otvet += letter_number + ' '
+                zapros = '<i>Alphabet:</i> ' + zapros
                 add_to_output(zapros, otvet)
             except:
                 zapros = ''
@@ -209,7 +214,7 @@ def qtools():
                     for word in zapros.split():
                         otvet += f'{word.strip()} ({len(word.strip())}): '
                         otvet += f'{anagram.getOne(word)}<br>'
-
+                zapros = '<i>Anagrams:</i> ' + zapros
                 add_to_output(zapros, otvet)
             except:
                 zapros = ''
@@ -237,7 +242,7 @@ def qtools():
                 else:
                     # Больше 2-х слов
                     otvet = 'Ошибка: по олимпийке нужно одно или два слова.'
-
+                zapros = '<i>Olymp:</i> ' + zapros
                 add_to_output(zapros, otvet)
             except:
                 zapros = ''
@@ -245,7 +250,7 @@ def qtools():
                 add_to_output(zapros, otvet)
             return redirect('/')
 
-    return render_template('quest_tools.html', output_window=Markup(session.get('output_window','')), current_version='0.11')
+    return render_template('quest_tools.html', output_window=Markup(session.get('output_window','')), current_version='0.12')
 
 if __name__ == '__main__':
 
