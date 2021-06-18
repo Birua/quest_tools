@@ -6,8 +6,10 @@
     - RU/EN alphabet to numbers and reverse
     - RU anagrams (one- and two-word)
     - Olympiika word game helper
+    - Caesar decoder with russian and english dictionary
 
     Version History:
+      0.13 -- 18/06/21 Caesar decoder
       0.12 -- 15/06/21 Apps print their id in the output, input text tooltips
       0.11 -- 11/06/21 OlympSolver
       0.10 -- 11/06/21 Introducing self-testing via assert (only for Debug = True!)
@@ -29,6 +31,7 @@ from apps.braille import BrailleTranslator
 from apps.mendel import PeriodicTable
 from apps.anagrams import Anagrams
 from apps.olymp import OlympSolver
+from apps.caesar import CaesarDecoder
 
 app = Flask(__name__)
 # Set the secret key to some random bytes. Keep this really secret!
@@ -250,7 +253,30 @@ def qtools():
                 add_to_output(zapros, otvet)
             return redirect('/')
 
-    return render_template('quest_tools.html', output_window=Markup(session.get('output_window','')), current_version='0.12')
+        # --------------------------------------------------
+        # Шифр Цезаря
+        # --------------------------------------------------
+        if request.form.get('caesar_txt'):
+
+            try:
+                zapros = request.form.get('caesar_txt')
+                caesar = CaesarDecoder()
+                if len(set(zapros).intersection("аеёиоуыэюя")) == 0:
+                    # English
+                    otvet = caesar.getEnglishMatch(zapros)
+                else:
+                    # Russian
+                    otvet = caesar.getRussianMatch(zapros)
+
+                zapros = '<i>Caesar:</i> ' + zapros
+                add_to_output(zapros, otvet)
+            except:
+                zapros = ''
+                otvet = 'Error: сбой блока Caesar'
+                add_to_output(zapros, otvet)
+            return redirect('/')
+
+    return render_template('quest_tools.html', output_window=Markup(session.get('output_window','')), current_version='0.13')
 
 if __name__ == '__main__':
 
