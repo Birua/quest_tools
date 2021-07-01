@@ -11,7 +11,7 @@ class OlympSolver():
     """
     def __init__(self):
         self.kubrai = pd.read_csv('static/Kubrai.csv', header=None, sep='\t')
-        self.sociation = pd.read_csv("static/sociation.org.tsv", header=None, sep='\t')
+        self.sociation = pd.read_csv("static/sociation_2.csv", header=None)
 
         assert 'море' in self.getSociationsForOne('пляж')
         assert 'море' in self.getSociationsForTwo('пляж песок')

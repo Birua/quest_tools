@@ -9,6 +9,7 @@
     - Caesar decoder with russian and english dictionary
 
     Version History:
+      0.14 -- 01/07/21 Updated sociations with yarn_ru_thesaurus
       0.13 -- 18/06/21 Caesar decoder
       0.12 -- 15/06/21 Apps print their id in the output, input text tooltips
       0.11 -- 11/06/21 OlympSolver
@@ -276,7 +277,7 @@ def qtools():
                 add_to_output(zapros, otvet)
             return redirect('/')
 
-    return render_template('quest_tools.html', output_window=Markup(session.get('output_window','')), current_version='0.13')
+    return render_template('quest_tools.html', output_window=Markup(session.get('output_window','')), current_version='0.14')
 
 if __name__ == '__main__':
 
