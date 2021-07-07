@@ -7,8 +7,10 @@
     - RU anagrams (one- and two-word)
     - Olympiika word game helper
     - Caesar decoder with russian and english dictionary
+    - Flag semaphore translator
 
     Version History:
+      0.15 -- 07/07/21 Flag semaphore Ru
       0.14 -- 01/07/21 Updated sociations with yarn_ru_thesaurus
       0.13 -- 18/06/21 Caesar decoder
       0.12 -- 15/06/21 Apps print their id in the output, input text tooltips
@@ -33,10 +35,12 @@ from apps.mendel import PeriodicTable
 from apps.anagrams import Anagrams
 from apps.olymp import OlympSolver
 from apps.caesar import CaesarDecoder
+from apps.semaphore import SemaphoreFlagsDecoder
 
 app = Flask(__name__)
 # Set the secret key to some random bytes. Keep this really secret!
 app.secret_key = b'D5r09fAe+!aIB1eRMT4tO*ko(M.w^s'
+
 
 @app.route('/', methods=['POST', 'GET'])
 def qtools():
@@ -77,13 +81,13 @@ def qtools():
                 zapros = request.form.get('morse_txt')
 
                 morse = MorseCodeTranslator()
-                otvet = morse.translate_morse(zapros).replace('\n','<br>')
+                otvet = morse.translate_morse(zapros).replace('\n', '<br>')
                 # check for empty result - REVERSE: text to morse convert
                 if otvet == '<br>':
                     otvet = morse.translate_text(zapros)
                 zapros = '<i>Morse:</i> ' + zapros
                 add_to_output(zapros, otvet)
-            except:
+            except Exception as ex:
                 zapros = ''
                 otvet = 'Error: сбой блока Morse'
                 add_to_output(zapros, otvet)
@@ -97,9 +101,9 @@ def qtools():
                 zapros = request.form.get('braille_txt')
 
                 braille = BrailleTranslator()
-                if zapros.replace(' ','').isnumeric():
+                if zapros.replace(' ', '').isnumeric():
                     # цифровые коды Брайля 12 14 и т.п.
-                    otvet = braille.convert_codes(zapros).replace('\n','<br>')
+                    otvet = braille.convert_codes(zapros).replace('\n', '<br>')
                     otvet += '<br> <braille>' + braille.translate_text(otvet.split('<br>')[1]) + '</braille>'
                 else:
                     if max([ord(_) for _ in zapros]) > 10_000:
@@ -110,7 +114,7 @@ def qtools():
                         otvet = '<braille>' + braille.translate_text(zapros) + '</braille>'
                 zapros = '<i>Braille:</i> ' + zapros
                 add_to_output(zapros, otvet)
-            except:
+            except Exception as ex:
                 zapros = ''
                 otvet = 'Error: сбой блока Braille'
                 add_to_output(zapros, otvet)
@@ -141,7 +145,7 @@ def qtools():
                             otvet += ' '.join([str(_) for _ in mendel.elementBySymbol(zapros)])
                 else:
                     # Групповой запрос на несколько элементов
-                    if zapros.replace(' ','').isnumeric():
+                    if zapros.replace(' ', '').isnumeric():
                         # по атомному номеру
                         for number in zapros.split():
                             otvet += str(mendel.elementByNumber(number)[3]) + ' '
@@ -156,7 +160,7 @@ def qtools():
                                 otvet += str(mendel.elementBySymbol(element_name)[0]) + ' '
                 zapros = '<i>Mendel:</i> ' + zapros
                 add_to_output(zapros, otvet)
-            except:
+            except Exception as ex:
                 zapros = ''
                 otvet = 'Error: сбой блока Mendeleev'
                 add_to_output(zapros, otvet)
@@ -191,7 +195,7 @@ def qtools():
                         otvet += letter_number + ' '
                 zapros = '<i>Alphabet:</i> ' + zapros
                 add_to_output(zapros, otvet)
-            except:
+            except Exception as ex:
                 zapros = ''
                 otvet = 'Error: сбой блока Alpha'
                 add_to_output(zapros, otvet)
@@ -220,7 +224,7 @@ def qtools():
                         otvet += f'{anagram.getOne(word)}<br>'
                 zapros = '<i>Anagrams:</i> ' + zapros
                 add_to_output(zapros, otvet)
-            except:
+            except Exception as ex:
                 zapros = ''
                 otvet = 'Error: сбой блока Anagrams'
                 add_to_output(zapros, otvet)
@@ -248,7 +252,7 @@ def qtools():
                     otvet = 'Ошибка: по олимпийке нужно одно или два слова.'
                 zapros = '<i>Olymp:</i> ' + zapros
                 add_to_output(zapros, otvet)
-            except:
+            except Exception as ex:
                 zapros = ''
                 otvet = 'Error: сбой блока Olymp'
                 add_to_output(zapros, otvet)
@@ -271,13 +275,40 @@ def qtools():
 
                 zapros = '<i>Caesar:</i> ' + zapros
                 add_to_output(zapros, otvet)
-            except:
+            except Exception as ex:
                 zapros = ''
                 otvet = 'Error: сбой блока Caesar'
                 add_to_output(zapros, otvet)
             return redirect('/')
+        # --------------------------------------------------
+        # Семафорная азбука
+        # --------------------------------------------------
+        if request.form.get('semaphore_txt'):
 
-    return render_template('quest_tools.html', output_window=Markup(session.get('output_window','')), current_version='0.14')
+            try:
+                zapros = request.form.get('semaphore_txt')
+                flagSemaphore = SemaphoreFlagsDecoder()
+                if len(set(zapros).intersection("абвгдеёжзийклмнопрстуфхцчшщъыьэюя")) == 0:
+                    # English
+                    otvet = 'Необходимо вводить коды левой руки и правой согласно рисунку.'
+                else:
+                    # Russian
+                    otvet = flagSemaphore.getSemaphoreRu(zapros)
+
+                if len(set(zapros).intersection("-")) == 0:
+                    otvet = 'Вводите коды левой и правой руки согласно рисунку. \
+                            Коды через дефис. Между буквами пробелы. \
+                            Например: нл-нп л-нл лн-в л-в л-н нл-нп лв-пн н-п'
+
+                zapros = '<i>FlagSemaphore:</i> ' + zapros
+                add_to_output(zapros, otvet)
+            except Exception as ex:
+                zapros = ''
+                otvet = 'Error: сбой блока FlagSemaphore'
+                add_to_output(zapros, otvet)
+            return redirect('/')
+
+    return render_template('quest_tools.html', output_window=Markup(session.get('output_window', '')), current_version='0.15')
 
 if __name__ == '__main__':
 
