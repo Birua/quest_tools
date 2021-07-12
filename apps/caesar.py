@@ -1,8 +1,8 @@
-import json
 import time
 import gzip
 
-class CaesarDecoder():
+
+class CaesarDecoder:
     """ Работаем с шифром Цезаря
     Методы:
         getRussianMatch(str)
@@ -56,7 +56,7 @@ class CaesarDecoder():
     def getRussianMatch(self, inputStr):
 
         with gzip.open('static/russian.txt.gz', 'r') as f:
-            russian_words = set(f.read().decode('cp1251').split())
+            russian_words = set(f.read().decode('cp1251').lower().split())
 
         all_variants = self._getAll(inputStr, self.alphabet_ru)
         outputStr = ''
@@ -78,7 +78,7 @@ class CaesarDecoder():
     def getEnglishMatch(self, inputStr):
 
         with open('static/english_alpha.txt') as word_file:
-            english_words = set(word_file.read().split())
+            english_words = set(word_file.read().lower().split())
 
         all_variants = self._getAll(inputStr, self.alphabet_en)
         outputStr = ''

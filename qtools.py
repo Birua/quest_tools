@@ -1,6 +1,6 @@
 """
     Flask app for quest tools.
-    - morse code translator
+    - Morse code translator
     - Braille code translator
     - Mendeleev periodic table reference
     - RU/EN alphabet to numbers and reverse
@@ -8,8 +8,10 @@
     - Olympiika word game helper
     - Caesar decoder with russian and english dictionary
     - Flag semaphore translator
+    - T9 phone codes to words using dictionary
 
     Version History:
+      0.16 -- 12/07/21 T9 phone codes
       0.15 -- 07/07/21 Flag semaphore Ru
       0.14 -- 01/07/21 Updated sociations with yarn_ru_thesaurus
       0.13 -- 18/06/21 Caesar decoder
@@ -36,6 +38,7 @@ from apps.anagrams import Anagrams
 from apps.olymp import OlympSolver
 from apps.caesar import CaesarDecoder
 from apps.semaphore import SemaphoreFlagsDecoder
+from apps.t9 import T9Decoder
 
 app = Flask(__name__)
 # Set the secret key to some random bytes. Keep this really secret!
@@ -45,18 +48,10 @@ app.secret_key = b'D5r09fAe+!aIB1eRMT4tO*ko(M.w^s'
 @app.route('/', methods=['POST', 'GET'])
 def qtools():
 
-    if session.get('output_window') is None:
-        output_window = ''
-        session['output_window'] = ''
-    else:
-        output_window = session.get('output_window')
-
     def add_to_output(zapros, otvet):
         # updating Output Window
         if isinstance(zapros, str) and isinstance(otvet, str):
-            output_window = session.get('output_window')
-            if output_window is None:
-                output_window = ''
+            output_window = session.get('output_window', '')
             output_window = zapros + ' <br> <hr> ' + output_window
             output_window = otvet + ' <br> ' + output_window
             if len(output_window) > 4000:
@@ -308,7 +303,33 @@ def qtools():
                 add_to_output(zapros, otvet)
             return redirect('/')
 
-    return render_template('quest_tools.html', output_window=Markup(session.get('output_window', '')), current_version='0.15')
+        # --------------------------------------------------
+        # T9 по словарю
+        # --------------------------------------------------
+        if request.form.get('t9_txt'):
+
+            try:
+                zapros = request.form.get('t9_txt')
+                t9 = T9Decoder()
+                if len(set(zapros).intersection('23456789')) == 0:
+                    # Значит тескт в код
+                    otvet = t9.getT9numbers(zapros.strip())
+                else:
+                    # Код в текст
+                    otvet = t9.getT9EnglishMatch(zapros.strip())
+                    otvet += '<br>'
+                    otvet += t9.getT9RussianMatch(zapros.strip())
+
+                zapros = '<i>T9:</i> ' + zapros
+                add_to_output(zapros, otvet)
+            except Exception as ex:
+                zapros = ''
+                otvet = 'Error: сбой блока T9'
+                add_to_output(zapros, otvet)
+            return redirect('/')
+
+    return render_template('quest_tools.html', output_window=Markup(session.get('output_window', '')),
+                           current_version='0.16')
 
 if __name__ == '__main__':
 
