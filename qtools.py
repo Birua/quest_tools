@@ -4,6 +4,7 @@
     - Braille code translator
     - Mendeleev periodic table reference
     - RU/EN alphabet to numbers and reverse
+    - Simple mask search
     - RU anagrams (one- and two-word)
     - Olympiika word game helper
     - Caesar decoder with russian and english dictionary
@@ -11,6 +12,7 @@
     - T9 phone codes to words using dictionary
 
     Version History:
+      0.17 -- 27/07/21 html help and simple mask search
       0.16 -- 12/07/21 T9 phone codes
       0.15 -- 07/07/21 Flag semaphore Ru
       0.14 -- 01/07/21 Updated sociations with yarn_ru_thesaurus
@@ -39,6 +41,7 @@ from apps.olymp import OlympSolver
 from apps.caesar import CaesarDecoder
 from apps.semaphore import SemaphoreFlagsDecoder
 from apps.t9 import T9Decoder
+from apps.mask import MaskSearch
 
 app = Flask(__name__)
 # Set the secret key to some random bytes. Keep this really secret!
@@ -328,8 +331,35 @@ def qtools():
                 add_to_output(zapros, otvet)
             return redirect('/')
 
+        # --------------------------------------------------
+        # Поиск по простой маске
+        # --------------------------------------------------
+        if request.form.get('mask_txt'):
+
+            try:
+                zapros = request.form.get('mask_txt')
+                alphabet_en = 'abcdefghijklmnopqrstuvwxyz'
+                # alphabet_ru = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
+                mask = MaskSearch()
+                if len(set(zapros).intersection(alphabet_en)) == 0:
+                    # Значит русский
+                    otvet = mask.mask_search_ru(zapros.strip())
+                else:
+                    # английский
+                    otvet = mask.mask_search_en(zapros.strip())
+
+                zapros = '<i>Mask:</i> ' + zapros
+                add_to_output(zapros, otvet)
+            except Exception as ex:
+                zapros = ''
+                otvet = 'Error: сбой блока Mask'
+                add_to_output(zapros, otvet)
+            return redirect('/')
+
+
+
     return render_template('quest_tools.html', output_window=Markup(session.get('output_window', '')),
-                           current_version='0.16')
+                           current_version='0.17')
 
 if __name__ == '__main__':
 

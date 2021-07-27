@@ -38,6 +38,10 @@
                 <input type="text" size="12" name="alpha_txt" title="слово ИЛИ несколько слов ИЛИ буква ИЛИ номер буквы" />
                 <input type="submit" name="alpha_submit" value="&#9735" title="отправить"/>
              </p>
+              <p align="right">Поиск по простой маске (? - одна буква, * - несколько):
+                <input type="text" size="12" name="mask_txt" title="слово = сло?? или сво*" />
+                <input type="submit" name="mask_submit" value="&#9735" title="отправить"/>
+             </p>
              <p align="right">Анаграммы:
                 <input type="text" size="12" name="anagrams_txt" title="одна анаграмма дает вариант из 2-х слов ИЛИ несколько одиночных анаграмм" />
                 <input type="submit" name="anagrams_submit" value="&#9735" title="отправить"/>
@@ -65,7 +69,8 @@
             <!-- Clear Button -->
             <form action = "/" method = "post">
                 <p>Очистить вывод
-                   <input type="submit" name="clear_submit" value="&#9851" title="очистить"/>
+                   <input type="submit" name="clear_submit" value="&#9851" title="очистить">
+                   <a href="{{ url_for('static', filename='quest_tools_help.html') }}">Информация.</a>
                 </p>
             </form>
 

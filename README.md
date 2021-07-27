@@ -10,6 +10,7 @@ for solving online quests.
   * [Braille code translator](#braille-code-translator)
   * [Mendeleev periodic table reference](#mendeleev-periodic-table-reference)
   * [RU/EN alphabet to numbers and reverse](#ruen-alphabet-to-numbers-and-reverse)
+  * [Simple mask search](#simple-mask-search)
   * [RU anagrams (one- and two-word)](#ru-anagrams-one--and-two-word)
   * [Olympiika word game helper](#olympiika-word-game-helper)
   * [Caesar code decoder](#caesar-code-decoder)
@@ -63,6 +64,20 @@ latin and cyrillic letters OR numbers.
 'hello' => '8 5 12 12 15'\
 '8 5 12 12 15' => 'ждккн hello'\
 '12 1 4 25' => 'кагч lady'
+
+## Simple mask search
+Search for russian OR english words using \* and \? symbols. \
+\? - one not empty letter.\
+\* - several letters or none.\
+Gives only first 100 words listed alphabetically.
+
+**Input:** \
+Mask for russian OR english word using \* and \? symbols.
+
+**Examples:** \
+'?лов?' => '(19) улова, олову, словн, ...'\
+'лов*' => '(>100!) ловцом, ловчиле, ловчишь, ...'\
+'en?r??' => '(20) enwrap, endrin, enerve, entrez, entrap, ...'
 
 ## RU anagrams (one- and two-word)
 Get anagrams from hash-table of anagrams created using

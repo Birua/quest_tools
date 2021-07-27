@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru" style="margin:10px;padding:10px">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Quest tools</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+  </head>
+
+  <body >
+  <h1 id="quest-tools">Quest Tools</h1>
+    <h2 id="about-this-project">About this Project</h2>
+    <p>Web-application built with the help of python and Flask
+    to provide easy access to some useful tools
+    for solving online quests.</p>
+    <ul>
+        <li><a href="#morse-code-translator">Morse code translator</a></li>
+        <li><a href="#braille-code-translator">Braille code translator</a></li>
+        <li><a href="#mendeleev-periodic-table-reference">Mendeleev periodic table reference</a></li>
+        <li><a href="#ru-en-alphabet-to-numbers-and-reverse">RU/EN alphabet to numbers and reverse</a></li>
+        <li><a href="#simple-mask-search">Simple mask search</a></li>
+        <li><a href="#ru-anagrams-one--and-two-word">RU anagrams (one- and two-word)</a></li>
+        <li><a href="#olympiika-word-game-helper">Olympiika word game helper</a></li>
+        <li><a href="#caesar-code-decoder">Caesar code decoder</a></li>
+        <li><a href="#flag-semaphore-decoder">Flag semaphore decoder</a></li>
+        <li><a href="#t9-phone-codes-decoder">T9 phone codes decoder</a></li>
+    </ul>
+
+    <h2 id="morse-code-translator">Morse code translator</h2>
+    <p>Dots and dashes to letters and reverse.</p>
+    <p><strong>Input:</strong> <br>
+    One word OR several words OR ...---...</p>
+    <p><strong>Examples:</strong> <br>
+    &#39;sos&#39; =&gt; ... --- ... <br>
+    &#39;hello world&#39; =&gt; .... . .-.. .-.. --- .-- --- .-. .-.. -..<br>
+    &#39;- . ... -&#39; =&gt; тест test</p>
+
+    <h2 id="braille-code-translator">Braille code translator</h2>
+    <p>Braille code uses numerical coding presented
+    in this figure: <br>
+    <img src="https://github.com/Birua/quest_tools/blob/master/static/Braille_cell.svg?raw=true" alt="Braille card" width="40" height="56"></p>
+    <p><strong>Input:</strong> <br>
+    One word OR several words OR 13456 15 234 <br></p>
+    <p><strong>Examples:</strong> <br>
+    &#39;hello world&#39; =&gt; ⠓⠑⠇⠇⠕ ⠺⠕⠗⠇⠙ <br>
+    &#39;13456 15 234&#39; =&gt; yes yес</p>
+
+    <h2 id="mendeleev-periodic-table-reference">Mendeleev periodic table reference</h2>
+    <p>Quick reference of chemical elements by number, name, or symbol.</p>
+    <p><strong>Input:</strong> <br>
+    element number OR several numbers OR element name/names <br>
+    separated by whitespace.</p>
+    <p><strong>Examples:</strong> <br>
+    &#39;12&#39; =&gt; &#39;12 Magnesium Магний Mg&#39; <br>
+    &#39;8 7 45 69&#39; =&gt; &#39;O N Rh Tm&#39; <br>
+    &#39;O N Rh Tm&#39; =&gt; &#39;8 7 45 69&#39; <br>
+    &#39;тантал&#39; =&gt; &#39;73 Tantalum Тантал Ta&#39;</p>
+
+    <h2 id="ru-en-alphabet-to-numbers-and-reverse">RU/EN alphabet to numbers and reverse</h2>
+    <p>Simple letters to numbers and reverse conversion.</p>
+    <p><strong>Input:</strong> <br>
+    latin and cyrillic letters OR numbers.</p>
+    <p><strong>Examples:</strong> <br>
+    &#39;hello&#39; =&gt; &#39;8 5 12 12 15&#39;<br>
+    &#39;8 5 12 12 15&#39; =&gt; &#39;ждккн hello&#39;<br>
+    &#39;12 1 4 25&#39; =&gt; &#39;кагч lady&#39;</p>
+
+    <h2 id="simple-mask-search">Simple mask search</h2>
+    <p>Search for russian OR english words using * and ? symbols. <br>
+    ? -- one not empty letter.<br>
+    * -- several letters or none.<br>
+    Gives only first 100 words listed alphabetically.</p>
+    <p><strong>Input:</strong> <br>
+    Mask for russian OR english word using * and ? symbols.</p>
+    <p><strong>Examples:</strong> <br>
+    '?лов?' => '(19) улова, олову, словн, ...'<br>
+    'лов*' => '(>100!) ловцом, ловчиле, ловчишь, ...'<br>
+    'en?r??' => '(20) enwrap, endrin, enerve, entrez, entrap, ...'
+    </p>
+
+    <h2 id="ru-anagrams-one-and-two-word-">RU anagrams (one- and two-word)</h2>
+    <p>Get anagrams from hash-table of anagrams created using
+    big database of russian words.</p>
+    <p><strong>Input:</strong> <br>
+    One word - you get full anagram and possible 2-word anagrams.<br>
+    Two and more words - you get full anagram for each word.</p>
+    <p><strong>Examples:</strong> <br>
+    &#39;проверка&#39; =&gt; <br>
+    &#39;Букв: 8 <br>
+    Полная анаграмма: проварке, проверка<br>
+    Варианты из двух слов:<br>
+    капер, карпе, крапе, крепа, парке, перка, репка + вор, вро, ров<br>
+    правке + ор, ро<br>
+    провар, прорва + ЕК, ке<br>
+    ...&#39; </p>
+    <p>&#39;слово море вода&#39; =&gt; <br>
+    &#39;слово (5): волос, ослов, слово<br>
+    море (4): ером, море, омер, орем, роем, роме<br>
+    вода (4): адов, вода&#39;</p>
+
+    <h2 id="olympiika-word-game-helper">Olympiika word game helper</h2>
+    <p>Uses data from sociation.org and
+    other sources to provide options of connected words.</p>
+    <p><strong>Input:</strong> <br>
+    One word - list of associated words.<br>
+    Two words - list of common associations for these words.</p>
+    <p><strong>Examples:</strong> <br>
+    &#39;крона&#39; =&gt; &#39;крона = древо, корона, деньги, макушка,
+    ветки, голова, монета, деревья, темя, гребень, чехия,
+    батарейка ...&#39;</p>
+    <p>&#39;море пляж&#39; =&gt; &#39;акула, ракушки, вода, закат ...&#39;</p>
+
+    <h2 id="caesar-code-decoder">Caesar code decoder</h2>
+    <p>Caesar Code Decoder provides one clear option
+    using corresponding russian or english dictionary.<br>
+    Indicates shift of the alphabet in the output.</p>
+    <p><strong>Input:</strong> <br>
+    Coded word or phrase.</p>
+    <p><strong>Examples:</strong> <br>
+    &#39;Ёв, н аъйжв ювжущ сяэы!&#39; =&gt; &#39;18: Чу, я слышу пушек гром!&#39;<br>
+    &#39;Iwxh xh hdbt higxcv! Vgtpi!&#39; =&gt; &#39;11: This is some string! Great!&#39;</p>
+
+    <h2 id="flag-semaphore-decoder">Flag semaphore decoder</h2>
+    <p>Translates into letters letter-coded positions
+    of flags written according to the figure: <br>
+    <img src="https://github.com/Birua/quest_tools/blob/master/static/flag_semaphore_VNLP.png?raw=true" alt="Flags" width="80" height="80"></p>
+    <p><strong>Input:</strong><br>
+    Letter-coded positions of right and left hand. Whitespace separates letters.</p>
+    <p><strong>Examples:</strong><br>
+    &#39;нл-нп л-нл лн-в л-в л-н нл-нп лв-пн н-п&#39; =&gt; &#39;абырвалг&#39;</p>
+
+    <h2 id="t9-phone-codes-decoder">T9 phone codes decoder</h2>
+    <p>Translates numbers to words using dictionary.</p>
+    <p><strong>Input:</strong><br>
+    Numbers from T9 key input OR words.</p>
+    <p><strong>Examples:</strong><br>
+    &#39;6543&#39; =&gt; &#39;okie, olid <br>
+    роке, сойд, соке, солд, спид, спле, токе, толе, униз&#39;<br>
+    &#39;5 6 6 6 5 2 6 4 4 4&#39; =&gt; &#39;островский&#39;<br>
+    &#39;привет&#39; =&gt; &#39;564236&#39;</p>
+</body></html>
