@@ -23,7 +23,7 @@
         <li><a href="#mendeleev-periodic-table-reference">Mendeleev periodic table reference</a></li>
         <li><a href="#ru-en-alphabet-to-numbers-and-reverse">RU/EN alphabet to numbers and reverse</a></li>
         <li><a href="#simple-mask-search">Simple mask search</a></li>
-        <li><a href="#ru-anagrams-one--and-two-word">RU anagrams (one- and two-word)</a></li>
+        <li><a href="#ru-anagrams-one-and-two-word">RU anagrams (one- and two-word)</a></li>
         <li><a href="#olympiika-word-game-helper">Olympiika word game helper</a></li>
         <li><a href="#caesar-code-decoder">Caesar code decoder</a></li>
         <li><a href="#flag-semaphore-decoder">Flag semaphore decoder</a></li>
@@ -73,16 +73,17 @@
     <p>Search for russian OR english words using * and ? symbols. <br>
     ? -- one not empty letter.<br>
     * -- several letters or none.<br>
+    Also works with SQL LIKE syntax: _, % <br>
     Gives only first 100 words listed alphabetically.</p>
     <p><strong>Input:</strong> <br>
     Mask for russian OR english word using * and ? symbols.</p>
     <p><strong>Examples:</strong> <br>
     '?лов?' => '(19) улова, олову, словн, ...'<br>
-    'лов*' => '(>100!) ловцом, ловчиле, ловчишь, ...'<br>
+    'лов*' => '(100) ловцом, ловчиле, ловчишь, ...'<br>
     'en?r??' => '(20) enwrap, endrin, enerve, entrez, entrap, ...'
     </p>
 
-    <h2 id="ru-anagrams-one-and-two-word-">RU anagrams (one- and two-word)</h2>
+    <h2 id="ru-anagrams-one-and-two-word">RU anagrams (one- and two-word)</h2>
     <p>Get anagrams from hash-table of anagrams created using
     big database of russian words.</p>
     <p><strong>Input:</strong> <br>

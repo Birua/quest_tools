@@ -12,6 +12,7 @@
     - T9 phone codes to words using dictionary
 
     Version History:
+      0.18 -- 03/08/21 SQL mask search (more than 10 times faster)
       0.17 -- 27/07/21 html help and simple mask search
       0.16 -- 12/07/21 T9 phone codes
       0.15 -- 07/07/21 Flag semaphore Ru
@@ -343,10 +344,10 @@ def qtools():
                 mask = MaskSearch()
                 if len(set(zapros).intersection(alphabet_en)) == 0:
                     # Значит русский
-                    otvet = mask.mask_search_ru(zapros.strip())
+                    otvet = mask.mask_search_ru_SQL(zapros.strip())
                 else:
                     # английский
-                    otvet = mask.mask_search_en(zapros.strip())
+                    otvet = mask.mask_search_en_SQL(zapros.strip())
 
                 zapros = '<i>Mask:</i> ' + zapros
                 add_to_output(zapros, otvet)
@@ -359,7 +360,7 @@ def qtools():
 
 
     return render_template('quest_tools.html', output_window=Markup(session.get('output_window', '')),
-                           current_version='0.17')
+                           current_version='0.18')
 
 if __name__ == '__main__':
 
